@@ -1,13 +1,13 @@
 ![image](https://user-images.githubusercontent.com/63624229/81629985-6bc2cb00-943f-11ea-9aef-b46d48c79244.png)
 
-# 동영상 공유 플랫폼
+# 동영상 공유 플랫폼 - community servie
 
 - 체크포인트 : https://workflowy.com/s/assessment-check-po/T5YrzcMewfo4J6LW
 
 
 # Table of contents
 
-- [동영상 공유 플랫폼](#---)
+- [동영상 공유 플랫폼 - community servie](#---
   - [서비스 시나리오](#서비스-시나리오)
   - [체크포인트](#체크포인트)
   - [분석/설계](#분석설계)
@@ -31,13 +31,23 @@
 2. 채널 관리 (channerl) : Core Domain
 3. 고객 관리 (client) : Supporting Domain
 4. 정책 관리 (policy) : Supporting Domain
+5. 커뮤니티 관리 (community) : Supporting Domain (추가)
 
 
-# 서비스 시나리오
+# 서비스 시나리오 - Community
 
 
-기능적 요구사항
+기능적 요구사항 - community 
+1. 고객이 커뮤니티를 생성한다.
+2. 고객이 커뮤니티에 글을 등록할 수 있다 
+3. 고객이 커퓨니티에 글을 삭제할 수 있다.
 
+비기능적 요구사항 - community
+1.
+
+
+--------------------------------------------------
+기능적 요구사항 - 전체
 1. 고객이 채널을 생성한다
 2. 고객이 채널을 수정/삭제 할 수 있다
 
