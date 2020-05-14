@@ -1,6 +1,6 @@
 ![image](https://user-images.githubusercontent.com/63624229/81629985-6bc2cb00-943f-11ea-9aef-b46d48c79244.png)
 
-# 동영상 공유 플랫폼 - community servie
+# 동영상 공유 플랫폼 - community servie (추가)
 
 - 체크포인트 : https://workflowy.com/s/assessment-check-po/T5YrzcMewfo4J6LW
 
@@ -41,38 +41,12 @@
 1. 고객이 커뮤니티를 생성한다.
 2. 고객이 커뮤니티에 글을 등록할 수 있다 
 3. 고객이 커퓨니티에 글을 삭제할 수 있다.
+4. 글에 댓글이 달렸을 때 고객이 알람을 받는다.
 
 비기능적 요구사항 - community
-1.
-
-
---------------------------------------------------
-기능적 요구사항 - 전체
-1. 고객이 채널을 생성한다
-2. 고객이 채널을 수정/삭제 할 수 있다
-
-3. 고객이 생성된 채널에 동영상을 업로드한다
-4. 고객이 업로드한 동영상을 수정/삭제 할 수 있다
-5. 정책 관리 시스템으로 정책을 등록한다
-
-6. 정책 관리 시스템으로 관리자가 정책을 수정할 수 있다
-7. 정책 관리 시스템이 동영상 등록/수정 시 정책 확인 요청을 받게되며 정책을 확인한다
-8. 고객이 동영상에 대하여 정책 관리 시스템에 환급 신청한다
-9. 정책 관리 시스템이 정책 확인하여 정책 위반 시 동영상 삭제를 요청한다
-
-
-비기능적 요구사항
-
-1. 트랜잭션
-    1. 동영상이 등록/수정 시 정책에 맞는지 확인되어야 한다          Async 호출 
-    2. 동영상이 등록/수정/삭제 시 채널 정보 업데이트가 되어야 한다  Async 호출
-    3. 고객이 환급신청 시 환급 정책에 맞는지 확인되어야 한다        Async 호출
-1. 장애격리
-    1. 고객 관리 서비스가 수행되지 않더라도 동영상 서비스는 365일 24시간 받을 수 있어야 한다  Async (event-driven), Eventual Consistency
-    2. 정책 관리 서비스 사용이 과중되면 사용자를 잠시동안 받지 않고 잠시 후에 하도록 유도한다
-1. 성능
-    1. 정책에 따라 동영상의 상태가 변경될 때마다 카톡 등으로 알림을 줄 수 있어야 한다  Event driven
-
+1. 채널이 생성시에 하나의 커뮤니티는 동적으로 생성이됨.
+2. 채널이 삭제시에도 커뮤니티 정보는 동적으로 삭제됨.
+3. 커뮤니티 글에 댓글이 달렸을 시에는 해당 댓글을 비동기로 알람을 줌.
 
 # 체크포인트
 
@@ -134,111 +108,28 @@
 
 # 분석/설계
 
-
-## AS-IS 조직 (Horizontally-Aligned)
- ![image](https://user-images.githubusercontent.com/63624229/81755796-b3eff500-94f4-11ea-83dc-aaee8bf6284b.png)
-
-## TO-BE 조직 (Vertically-Aligned)
- ![image](https://user-images.githubusercontent.com/63624229/81755883-04ffe900-94f5-11ea-8e25-a4bd5137f5b0.png)
-
-
 ## Event Storming 결과
-* MSAEz 로 모델링한 이벤트스토밍 결과:  http://msaez.io/#/storming/kFlEMeCtr1ZQwNanBRR6onPu1Lf1/every/81199d72676bc36939a91135e197c4a2/-M7BG75bxejUqAIUq_dh
+* MSAEz 로 모델링한 이벤트스토밍 결과:  http://msaez.io/#/storming/kFlEMeCtr1ZQwNanBRR6onPu1Lf1/mine/81199d72676bc36939a91135e197c4a2/-M7Fa5CsrzSiNOTsknMV
 
 
-### 이벤트 도출
-![image](https://user-images.githubusercontent.com/63624229/81628763-7af44980-943c-11ea-9f64-5bd3a577ac04.png)
+### 모델 
 
-### 부적격 이벤트 탈락
-![20200511_134543](https://user-images.githubusercontent.com/63624229/81533541-5c8d4000-93a1-11ea-9686-68bf31734676.jpg)
+![image](https://user-images.githubusercontent.com/19707715/81892676-a5820600-95e6-11ea-9d45-2e708d0022fa.png)
 
-    - 과정중 도출된 잘못된 도메인 이벤트들을 걸러내는 작업을 수행함
-        -고객관리 > 로그인됨, 동영상 관리 > 좋아요됨, 동영상 조회됨, 검색됨 : UI 의 이벤트이지,
-        업무적인 의미의 이벤트가 아니라서 제외한다
+1. 고객이 커뮤니티를 생성한다. (ok)
+2. 고객이 커뮤니티에 글을 등록할 수 있다. (ok) 
+3. 고객이 커퓨니티에 글을 삭제할 수 있다. (ok)
+4. 글에 댓글이 달렸을 때 고객이 알람을 받는다. (ok)
 
-
-### 액터, 커맨드 부착하여 읽기 좋게
-![20200511_140728](https://user-images.githubusercontent.com/63624229/81533574-63b44e00-93a1-11ea-9b96-43acb9b2e9aa.jpg)
-
-
-### 어그리게잇으로 묶기
-
-![20200511_143718](https://user-images.githubusercontent.com/63624229/81533625-7a5aa500-93a1-11ea-80b8-94e0208674fa.jpg)
-
-   - 고객관리의 회원가입과 채널, 정책관리의 환급, 정책은 그와 연결된 command와 event들에 의하여 트랜잭션이 유지되어야 하는 단위로 그들끼리 묶어줌
-
-### 바운디드 컨텍스트로 묶기
-
-![20200511_142445](https://user-images.githubusercontent.com/63624229/81533585-6747d500-93a1-11ea-96d8-72cfc3c8e75d.jpg)
-
-
-    - 도메인 서열 분리 
-        - Core Domain: video, channel : 없어서는 안될 핵심 서비스이며,
-        연견 Up-time SLA 수준을 99.999% 목표, 배포주기는 app 의 경우 1주일 1회 미만, store 의 경우 1개월 1회 미만
-        - Supporting Domain: client, policy : 경쟁력을 내기위한 서비스이며,
-        SLA 수준은 연간 60% 이상 uptime 목표, 배포주기는 각 팀의 자율이나 표준 스프린트 주기가 1주일 이므로 1주일 1회 이상을 기준으로 한다
-        - General Domain: pay : 송금 서비스로 3rd Party 외부 서비스를 사용하는 것이 경쟁력이 높음 (핑크색으로 이후 전환할 예정)
-
-
-### 폴리시 부착 (괄호는 수행주체, 폴리시 부착을 둘째단계에서 해놔도 상관 없음. 전체 연계가 초기에 드러남)
-
-![20200511_143436](https://user-images.githubusercontent.com/63624229/81533594-6dd64c80-93a1-11ea-8296-4fdf2143f947.jpg)
-
-### 폴리시의 이동과 컨텍스트 매핑 (점선은 Pub/Sub, 실선은 Req/Resp)
-
-![20200511_150001](https://user-images.githubusercontent.com/63624229/81533663-8e060b80-93a1-11ea-88c7-a09f9ca34cfd.jpg)
-
-### 완성된 1차 모형
-
-![20200511_154304](https://user-images.githubusercontent.com/63624229/81533714-9fe7ae80-93a1-11ea-8a9d-c8f1bdcbe804.jpg)
-![20200511_154308](https://user-images.githubusercontent.com/63624229/81533722-a2e29f00-93a1-11ea-9915-83bea5f7825f.jpg)
-
-    - View Model 추가
-
-### 1차 완성본에 대한 기능적/비기능적 요구사항을 커버하는지 검증
-
-![image](https://user-images.githubusercontent.com/63624229/81630979-e1c83180-9441-11ea-8f8f-dffa0de5b806.png)
-
-    - 고객이 회원 가입한다 (ok)
-    - 고객이 채널을 생성한다 (ok)
-    - 고객이 채널에 동영상을 등록하면 채널 정보가 업데이트 된다 (ok)
-    - 고객이 업로드된 동영상에 대하여 환급 신청을 하면 환급 정책에 따라 환급된다 (ok)
-
-![image](https://user-images.githubusercontent.com/63624229/81648285-6d08ed80-9469-11ea-9354-c10338d0f02d.png)
-
-    - 고객이 동영상을 조회하면 동영상 조회수가 증가한다 (?)
-    - 동영상 정보가 수정되면 채널 정보를 업데이트 한다 (?)
-    - 채널 정보가 업데이트 되면 고객 관리 정보 중 환급 신청을 위한 전체 조회 수 정보를 업데이트 한다 (?)
-    - 고객이 업로드된 동영상에 대하여 환급 신청을 하면 환급 정책에 따라 환급된다 (ok)
-
-### 모델 수정
-
-![image](https://user-images.githubusercontent.com/63624229/81771100-0e9d4700-951d-11ea-95fb-9063afb6a097.png)
-
-
-    - 수정된 모델은 모든 요구사항을 커버한다
-    
-    - 고객이 회원 가입을 한다 (ok)
-    - 고객이 채널을 생성한다 (ok)
-    - 고객이 채널을 수정/삭제 할 수 있다 (ok)
-    - 고객이 생성된 채널에 동영상을 업로드한다 (ok)
-    - 고객이 업로드한 동영상을 수정/삭제 할 수 있다 (ok)
-    - 정책 관리 시스템으로 정책을 등록한다 (ok)
-    - 정책 관리 시스템으로 관리자가 정책을 수정할 수 있다 (ok)
-    - 정책 관리 시스템이 동영상 등록/수정 시 정책 확인 요청을 받게되며 정책을 확인한다 (ok)
-    - 고객이 동영상에 대하여 정책 관리 시스템에 환급 신청한다 (ok)
-    - 정책 관리 시스템이 정책 확인하여 정책 위반 시 동영상 삭제를 요청한다 (ok)
-    
 
 ### 비기능 요구사항에 대한 검증
 
-![image](https://user-images.githubusercontent.com/63624229/81632274-d1fe1c80-9444-11ea-9046-7b525d3f2ac1.png)
+![image](https://user-images.githubusercontent.com/19707715/81892676-a5820600-95e6-11ea-9d45-2e708d0022fa.png)
 
-    - 마이크로 서비스를 넘나드는 시나리오에 대한 트랜잭션 처리
-        - 모두 inter-microservice 트랜잭션 : 동영상이 등록/수정 시 정책에 맞는지 확인,
-        동영상이 등록/수정/삭제 시 채널 정보 업데이트,
-        고객이 환급신청 시 환급 정책에 맞는지 확인의 모든 경우가 대부분이라 판단, Eventual Consistency 를 기본으로 채택한다
-
+비기능적 요구사항 - community
+1. 채널이 생성시에 하나의 커뮤니티는 동적으로 생성이됨. (ok)
+2. 채널이 삭제시에도 커뮤니티 정보는 동적으로 삭제됨. (ok)
+3. 커뮤니티 글에 댓글이 달렸을 시에는 해당 댓글을 비동기로 알람을 줌. v
 
 ## 헥사고날 아키텍처 다이어그램 도출
     
@@ -253,16 +144,7 @@
 분석/설계 단계에서 도출된 헥사고날 아키텍처에 따라, 각 BC별로 대변되는 마이크로 서비스들을 스프링부트와 파이선으로 구현하였다. 구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (각자의 포트넘버는 8081 ~ 808n 이다)
 
 ```
-cd client
-mvn spring-boot:run
-
-cd channel
-mvn spring-boot:run 
-
-cd video
-mvn spring-boot:run  
-
-cd policy
+cd community
 mvn spring-boot:run
 ```
 
